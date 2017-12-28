@@ -1,0 +1,17 @@
+variables:
+  DOCKER_HOST: tcp://localhost:2375
+
+image: docker:latest
+
+services:
+  - docker:dind
+
+before_script:
+  - docker info
+  - docker login registry.fryman.io:5000 -u gitlab -p $FRYMANIO_DOCKER_PASSWORD
+
+build-deploy-image:
+  stage: build
+  script:
+    - docker build -t registry.fryman.io:5000/cameras-fryman-io:latest .
+    - docker push registry.fryman.io:5000/cameras-fryman-io:latest
